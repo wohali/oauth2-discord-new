@@ -1,0 +1,9 @@
+*.swp
+*~
+.coveralls.yml
+build/
+composer.lock
+composer.phar
+coveralls.phar
+test/log
+vendor/

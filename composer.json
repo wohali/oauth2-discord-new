@@ -1,0 +1,48 @@
+{
+    "name": "wohali/oauth2-discord-new",
+    "description": "Discord OAuth 2.0 Client Provider for The PHP League OAuth2-Client",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joan Touzet",
+            "email": "wohali@gmail.com",
+            "homepage": "https://github.com/wohali"
+        }
+    ],
+    "keywords": [
+        "oauth",
+        "oauth2",
+        "client",
+        "authorization",
+        "authorisation",
+        "discord"
+    ],
+    "require": {
+        "league/oauth2-client": "^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.0",
+        "mockery/mockery": "~0.9",
+        "squizlabs/php_codesniffer": "^2.0",
+        "jakub-onderka/php-parallel-lint": "~0.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Wohali\\OAuth2\\Client\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Wohali\\OAuth2\\Client\\Test\\": "test/src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    },
+    "conflict": {
+        "team-reflex/oauth2-discord": ">=1.0"
+    }
+}
+
