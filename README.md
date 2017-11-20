@@ -52,7 +52,7 @@ echo ('Main screen turn on!<br/><br/>');
 $provider = new \Wohali\OAuth2\Client\Provider\Discord([
     'clientId' => '{discord-client-id}',
     'clientSecret' => '{discord-client-secret}',
-    'redirecturi' => '{your-server-uri-to-this-script-here}'
+    'redirectUri' => '{your-server-uri-to-this-script-here}'
 ]);
 
 if (!isset($_GET['code'])) {
