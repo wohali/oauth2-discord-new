@@ -37,7 +37,7 @@ This self-contained example:
 
 1. Gets an authorization code
 1. Gets an access token using the provided authorization code
-1. Looks up the user's provile with the provided access token
+1. Looks up the user's profile with the provided access token
 
 You can try this script by [registering a Discord App](https://discordapp.com/developers/applications/me/create) with a redirect URI to your server's copy of this sample script. Then, place the Discord app's client id and secret, along with that same URI, into the settings at the top of the script.
 
