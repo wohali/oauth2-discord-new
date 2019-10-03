@@ -78,6 +78,15 @@ class DiscordResourceOwner implements ResourceOwnerInterface
     }
 
     /**
+     * Get resource owner avatar hash
+     *
+     * @return string|null
+     */
+    public function getLocale()
+    {
+        return $this->getValueByKey($this->response, 'locale');
+    }
+    /**
      * Get resource owner verified flag
      *
      * @return bool
