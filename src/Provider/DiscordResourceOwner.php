@@ -78,7 +78,7 @@ class DiscordResourceOwner implements ResourceOwnerInterface
     }
 
     /**
-     * Get resource owner avatar hash
+     * Get resource locale string
      *
      * @return string|null
      */
