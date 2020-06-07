@@ -39,7 +39,7 @@ This self-contained example:
 1. Gets an access token using the provided authorization code
 1. Looks up the user's profile with the provided access token
 
-You can try this script by [registering a Discord App](https://discordapp.com/developers/applications/me/create) with a redirect URI to your server's copy of this sample script. Then, place the Discord app's client id and secret, along with that same URI, into the settings at the top of the script.
+You can try this script by [registering a Discord App](https://discord.com/developers/applications/me/create) with a redirect URI to your server's copy of this sample script. Then, place the Discord app's client id and secret, along with that same URI, into the settings at the top of the script.
 
 ```php
 <?php
@@ -115,7 +115,7 @@ $authorizationUrl = $provider->getAuthorizationUrl($options);
 ```
 If neither are defined, the provider will utilize internal defaults.
 
-At the time of authoring this documentation, the [following scopes are available](https://discordapp.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes):
+At the time of authoring this documentation, the [following scopes are available](https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes):
 
 - bot
 - connections
@@ -168,7 +168,7 @@ try {
 
 ### Bot Authorization
 
-To authorize a bot, specify a scope of `bot` and set [permissions](https://discordapp.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags) appropriately:
+To authorize a bot, specify a scope of `bot` and set [permissions](https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags) appropriately:
 
 ```php
 // create $provider as in the initial example
