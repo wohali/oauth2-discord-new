@@ -9,19 +9,12 @@ matrix:
     - php: 7.0
     - php: 7.1
     - php: 7.2
+    - php: 7.3
+    - php: 7.4
     - php: nightly
-    - php: hhvm
-      sudo: required
-      dist: trusty
-      group: edge
-    - php: hhvm-nightly
-      sudo: required
-      dist: trusty
-      group: edge
   fast_finish: true
   allow_failures:
     - php: nightly
-    - php: hhvm-nightly
 
 
 before_script:
