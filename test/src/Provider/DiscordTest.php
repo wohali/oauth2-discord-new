@@ -3,7 +3,7 @@
 use League\OAuth2\Client\Tool\QueryBuilderTrait;
 use Mockery as m;
 
-class DiscordTest extends \PHPUnit_Framework_TestCase
+class DiscordTest extends \PHPUnit\Framework\TestCase
 {
     use QueryBuilderTrait;
 
