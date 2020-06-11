@@ -13,11 +13,9 @@ This package provides Discord OAuth 2.0 support for the PHP League's [OAuth 2.0 
 
 The following versions of PHP are supported.
 
-* PHP 5.6
-* PHP 7.0
-* PHP 7.1
 * PHP 7.2
-* HHVM
+* PHP 7.3
+* PHP 7.4
 
 ## Installation
 
