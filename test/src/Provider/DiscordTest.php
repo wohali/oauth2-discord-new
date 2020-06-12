@@ -3,13 +3,13 @@
 use League\OAuth2\Client\Tool\QueryBuilderTrait;
 use Mockery as m;
 
-class DiscordTest extends \PHPUnit_Framework_TestCase
+class DiscordTest extends \PHPUnit\Framework\TestCase
 {
     use QueryBuilderTrait;
 
     protected $provider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->provider = new \Wohali\OAuth2\Client\Provider\Discord([
             'clientId' => 'mock_client_id',
@@ -18,7 +18,7 @@ class DiscordTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
         parent::tearDown();
@@ -46,7 +46,7 @@ class DiscordTest extends \PHPUnit_Framework_TestCase
         $query = ['scope' => implode($scopeSeparator, $options['scope'])];
         $url = $this->provider->getAuthorizationUrl($options);
         $encodedScope = $this->buildQueryString($query);
-        $this->assertContains($encodedScope, $url);
+        $this->assertStringContainsString($encodedScope, $url);
     }
 
     public function testGetAuthorizationUrl()
@@ -127,11 +127,9 @@ class DiscordTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $user->toArray()['verified']);
     }
 
-    /**
-     * @expectedException League\OAuth2\Client\Provider\Exception\IdentityProviderException
-     **/
     public function testExceptionThrownErrorObjectReceived()
     {
+        $this->expectException(\League\OAuth2\Client\Provider\Exception\IdentityProviderException::class);
         $status = rand(400,600);
         $postResponse = m::mock('Psr\Http\Message\ResponseInterface');
         $postResponse->shouldReceive('getBody')->andReturn('{"client_id": ["This field is required"]}');
