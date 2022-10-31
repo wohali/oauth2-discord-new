@@ -28,7 +28,7 @@ class Discord extends AbstractProvider
      *
      * @var string
      */
-    public $apiDomain = 'https://discord.com/api';
+    public $apiDomain = 'https://discord.com/api/v9';
 
     /**
      * Get authorization URL to begin OAuth flow
