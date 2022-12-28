@@ -29,7 +29,7 @@ class DiscordIdentityProviderException extends IdentityProviderException
     {
         return static::fromResponse(
             $response,
-            isset($data['message']) ? $data['message'] : json_encode($data)
+            $data['message'] ?? json_encode($data)
         );
     }
 
