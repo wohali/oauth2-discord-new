@@ -1,9 +1,15 @@
-<?php namespace Wohali\OAuth2\Client\Test\Provider;
+<?php
 
+namespace Wohali\OAuth2\Client\Test\Provider;
+
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Tool\QueryBuilderTrait;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
+use UnexpectedValueException;
+use Wohali\OAuth2\Client\Provider\Discord;
 
-class DiscordTest extends \PHPUnit\Framework\TestCase
+class DiscordTest extends TestCase
 {
     use QueryBuilderTrait;
 
@@ -11,7 +17,7 @@ class DiscordTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->provider = new \Wohali\OAuth2\Client\Provider\Discord([
+        $this->provider = new Discord([
             'clientId' => 'mock_client_id',
             'clientSecret' => 'mock_secret',
             'redirectUri' => 'none'
@@ -67,6 +73,14 @@ class DiscordTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('/api/oauth2/token', $uri['path']);
     }
 
+    public function testGetBaseRevokeTokenUrl()
+    {
+        $url = $this->provider->getBaseRevokeTokenUrl();
+        $uri = parse_url($url);
+
+        $this->assertEquals('/api/v9/oauth2/token/revoke', $uri['path']);
+    }
+
     public function testGetAccessToken()
     {
         $response = m::mock('Psr\Http\Message\ResponseInterface');
@@ -84,6 +98,52 @@ class DiscordTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($token->getExpires());
         $this->assertNull($token->getRefreshToken());
         $this->assertNull($token->getResourceOwnerId());
+    }
+
+    public function testRevokeAccessToken()
+    {
+        $response = m::mock('Psr\Http\Message\ResponseInterface');
+        $response->shouldReceive('getBody')->andReturn('{}');
+        $response->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
+        $response->shouldReceive('getStatusCode')->andReturn(200);
+
+        $client = m::mock('GuzzleHttp\ClientInterface');
+        $client->shouldReceive('send')->times(1)->andReturn($response);
+
+        $this->provider->setHttpClient($client);
+
+        $this->provider->revokeAccessToken('mock_access_token');
+
+        // Increment the assertion count to signal this test passed (as the tested method returns no value)
+        $this->addToAssertionCount(1);
+    }
+
+    public function testRevokeRefreshToken()
+    {
+        $response = m::mock('Psr\Http\Message\ResponseInterface');
+        $response->shouldReceive('getBody')->andReturn('{}');
+        $response->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
+        $response->shouldReceive('getStatusCode')->andReturn(200);
+
+        $client = m::mock('GuzzleHttp\ClientInterface');
+        $client->shouldReceive('send')->times(1)->andReturn($response);
+
+        $this->provider->setHttpClient($client);
+
+        $this->provider->revokeRefreshToken('mock_refresh_token');
+
+        // Increment the assertion count to signal this test passed (as the tested method returns no value)
+        $this->addToAssertionCount(1);
+    }
+
+    public function testExceptionThrownInvalidTokenTypeHint()
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        $this->provider->revokeToken([
+            'token' => 'mock_random_token',
+            'token_type_hint' => 'invalid',
+        ]);
     }
 
     public function testUserData()
@@ -129,7 +189,7 @@ class DiscordTest extends \PHPUnit\Framework\TestCase
 
     public function testExceptionThrownErrorObjectReceived()
     {
-        $this->expectException(\League\OAuth2\Client\Provider\Exception\IdentityProviderException::class);
+        $this->expectException(IdentityProviderException::class);
         $status = rand(400,600);
         $postResponse = m::mock('Psr\Http\Message\ResponseInterface');
         $postResponse->shouldReceive('getBody')->andReturn('{"client_id": ["This field is required"]}');
