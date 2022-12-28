@@ -30,7 +30,8 @@ class DiscordResourceOwner implements ResourceOwnerInterface
     /**
      * Creates new resource owner.
      *
-     * @param array  $response
+     * @param  array $response
+     * @return void
      */
     public function __construct(array $response = array())
     {

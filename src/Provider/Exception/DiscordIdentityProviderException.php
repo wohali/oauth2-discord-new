@@ -23,7 +23,6 @@ class DiscordIdentityProviderException extends IdentityProviderException
      *
      * @param  ResponseInterface $response
      * @param  array $data Parsed response data
-     *
      * @return IdentityProviderException
      */
     public static function clientException(ResponseInterface $response, $data)
@@ -39,7 +38,6 @@ class DiscordIdentityProviderException extends IdentityProviderException
      *
      * @param  ResponseInterface $response
      * @param  string $message
-     *
      * @return IdentityProviderException
      */
     protected static function fromResponse(ResponseInterface $response, $message = null)

@@ -14,6 +14,8 @@
 namespace Wohali\OAuth2\Client\Provider;
 
 use League\OAuth2\Client\Provider\AbstractProvider;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
@@ -44,7 +46,6 @@ class Discord extends AbstractProvider
      * Get access token URL to retrieve token
      *
      * @param  array $params
-     *
      * @return string
      */
     public function getBaseAccessTokenUrl(array $params)
@@ -56,7 +57,6 @@ class Discord extends AbstractProvider
      * Get provider URL to retrieve user details
      *
      * @param  AccessToken $token
-     *
      * @return string
      */
     public function getResourceOwnerDetailsUrl(AccessToken $token)
@@ -99,10 +99,11 @@ class Discord extends AbstractProvider
     /**
      * Check a provider response for errors.
      *
-     * @throws IdentityProviderException
-     * @param  ResponseInterface @response
+     * @param  ResponseInterface $response
      * @param  array $data Parsed response data
      * @return void
+     *
+     * @throws IdentityProviderException
      */
     protected function checkResponse(ResponseInterface $response, $data)
     {
@@ -114,9 +115,9 @@ class Discord extends AbstractProvider
     /**
      * Generate a user object from a successful user details request.
      *
-     * @param array $response
-     * @param AccessToken $token
-     * @return \League\OAuth2\Client\Provider\ResourceOwnerInterface
+     * @param  array $response
+     * @param  AccessToken $token
+     * @return ResourceOwnerInterface
      */
     protected function createResourceOwner(array $response, AccessToken $token)
     {
