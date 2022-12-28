@@ -18,6 +18,8 @@
         "discord"
     ],
     "require": {
+        "php": "^7.2|^8.0",
+        "ext-json": "*",
         "league/oauth2-client": "^2.0"
     },
     "require-dev": {
