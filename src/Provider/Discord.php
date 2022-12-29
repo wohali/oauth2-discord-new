@@ -29,7 +29,14 @@ class Discord extends AbstractProvider
     use TokenRevocationProviderTrait;
 
     /**
-     * API Domain
+     * Default host
+     *
+     * @var string
+     */
+    public $host = 'https://discord.com';
+
+    /**
+     * API domain
      *
      * @var string
      */
@@ -42,14 +49,13 @@ class Discord extends AbstractProvider
      */
     public function getBaseAuthorizationUrl()
     {
-        return $this->apiDomain.'/oauth2/authorize';
+        return $this->host.'/oauth2/authorize';
     }
 
     /**
      * Get access token URL to retrieve token
      *
      * @param  array $params
-     *
      * @return string
      */
     public function getBaseAccessTokenUrl(array $params)
@@ -71,7 +77,6 @@ class Discord extends AbstractProvider
      * Get provider URL to retrieve user details
      *
      * @param  AccessToken $token
-     *
      * @return string
      */
     public function getResourceOwnerDetailsUrl(AccessToken $token)
@@ -114,10 +119,11 @@ class Discord extends AbstractProvider
     /**
      * Check a provider response for errors.
      *
-     * @throws IdentityProviderException
-     * @param  ResponseInterface @response
+     * @param  ResponseInterface $response
      * @param  array $data Parsed response data
      * @return void
+     *
+     * @throws IdentityProviderException
      */
     protected function checkResponse(ResponseInterface $response, $data)
     {
@@ -129,8 +135,8 @@ class Discord extends AbstractProvider
     /**
      * Generate a user object from a successful user details request.
      *
-     * @param array $response
-     * @param AccessToken $token
+     * @param  array $response
+     * @param  AccessToken $token
      * @return ResourceOwnerInterface
      */
     protected function createResourceOwner(array $response, AccessToken $token)
