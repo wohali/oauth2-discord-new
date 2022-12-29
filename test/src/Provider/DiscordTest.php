@@ -54,7 +54,7 @@ class DiscordTest extends \PHPUnit\Framework\TestCase
         $url = $this->provider->getAuthorizationUrl();
         $uri = parse_url($url);
 
-        $this->assertEquals('/api/v9/oauth2/authorize', $uri['path']);
+        $this->assertEquals('/oauth2/authorize', $uri['path']);
     }
 
     public function testGetBaseAccessTokenUrl()
