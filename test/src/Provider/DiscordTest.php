@@ -5,12 +5,15 @@ namespace Wohali\OAuth2\Client\Test\Provider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Tool\QueryBuilderTrait;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\RequestInterface;
 use UnexpectedValueException;
 use Wohali\OAuth2\Client\Provider\Discord;
 
 class DiscordTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
     use QueryBuilderTrait;
 
     protected $provider;
@@ -22,12 +25,6 @@ class DiscordTest extends TestCase
             'clientSecret' => 'mock_secret',
             'redirectUri' => 'none'
         ]);
-    }
-
-    public function tearDown(): void
-    {
-        m::close();
-        parent::tearDown();
     }
 
     public function testAuthorizationUrl()
@@ -107,33 +104,25 @@ class DiscordTest extends TestCase
         $response->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
         $response->shouldReceive('getStatusCode')->andReturn(200);
 
-        $client = m::mock('GuzzleHttp\ClientInterface');
-        $client->shouldReceive('send')->times(1)->andReturn($response);
+        $client = m::spy('GuzzleHttp\ClientInterface', [
+            'send' => $response,
+        ]);
 
         $this->provider->setHttpClient($client);
 
-        $this->provider->revokeAccessToken('mock_access_token');
+        $this->provider->revokeToken([
+            'client_id' => 'custom_client_id',
+            'token' => 'mock_access_token',
+        ]);
 
-        // Increment the assertion count to signal this test passed (as the tested method returns no value)
-        $this->addToAssertionCount(1);
-    }
+        $client->shouldHaveReceived('send')->withArgs(function (RequestInterface $request) {
+            $contents = $request->getBody()->getContents();
+            parse_str($contents, $data);
 
-    public function testRevokeRefreshToken()
-    {
-        $response = m::mock('Psr\Http\Message\ResponseInterface');
-        $response->shouldReceive('getBody')->andReturn('{}');
-        $response->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
-        $response->shouldReceive('getStatusCode')->andReturn(200);
-
-        $client = m::mock('GuzzleHttp\ClientInterface');
-        $client->shouldReceive('send')->times(1)->andReturn($response);
-
-        $this->provider->setHttpClient($client);
-
-        $this->provider->revokeRefreshToken('mock_refresh_token');
-
-        // Increment the assertion count to signal this test passed (as the tested method returns no value)
-        $this->addToAssertionCount(1);
+            return $request->getMethod() === 'POST'
+                && $data['token'] === 'mock_access_token'
+                && $data['client_id'] === 'custom_client_id';
+        });
     }
 
     public function testExceptionThrownInvalidTokenTypeHint()

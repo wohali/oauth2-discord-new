@@ -219,7 +219,18 @@ class Discord extends AbstractProvider
     /**
      * Request a token revocation
      *
-     * @param  array $options
+     * Revoking an access/refresh token will invalidate it and will clean up
+     * associated data with the underlying authorization grant.
+     *
+     * Revoking an access token MAY also invalidate the refresh token based on
+     * the same authorization grant. It actually is the current behavior of the
+     * Discord OAuth2 server. However, this behavior is only optional (according
+     * to the section 2.1, RFC7009) and undocumented and may change.
+     *
+     * On the other hand, revoking a refresh token will immediately invalidate
+     * all access tokens based on the same authorization grant.
+     *
+     * @param  array $options Request parameters
      * @return void
      *
      * @throws IdentityProviderException
@@ -235,48 +246,7 @@ class Discord extends AbstractProvider
         $params = $this->prepareRevokeTokenParameters($params, $options);
         $request = $this->getRevokeTokenRequest($params);
 
-        // The name of the method is misleading, however, this also sends the request
+        // The name is misleading, however, this also sends the request
         $this->getParsedResponse($request);
-    }
-
-    /**
-     * Revoke an access token
-     *
-     * This MAY revoke the refresh token based on the same authorization grant,
-     * too. _Currently, it actually is the behavior of the Discord OAuth2 server._
-     *
-     * However, as this is only an optional behavior (according to the section 2.1,
-     * RFC7009) and it is not properly documented by Discord, it is recommended
-     * to either revoke all tokens manually, or revoke the refresh token only.
-     *
-     * @param  string $accessToken
-     * @return void
-     *
-     * @throws IdentityProviderException
-     * @throws UnexpectedValueException
-     */
-    public function revokeAccessToken(string $accessToken)
-    {
-        $this->revokeToken([
-            'token' => $accessToken,
-            'token_type_hint' => 'access_token',
-        ]);
-    }
-
-    /**
-     * Revoke all tokens based on the same authorization grant by a refresh token
-     *
-     * @param  string $refreshToken
-     * @return void
-     *
-     * @throws IdentityProviderException
-     * @throws UnexpectedValueException
-     */
-    public function revokeRefreshToken(string $refreshToken)
-    {
-        $this->revokeToken([
-            'token' => $refreshToken,
-            'token_type_hint' => 'refresh_token',
-        ]);
     }
 }
