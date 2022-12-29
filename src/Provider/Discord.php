@@ -26,6 +26,7 @@ use Wohali\OAuth2\Client\Provider\Exception\DiscordIdentityProviderException;
 class Discord extends AbstractProvider
 {
     use BearerAuthorizationTrait;
+    use TokenRevocationProviderTrait;
 
     /**
      * API Domain
@@ -173,47 +174,6 @@ class Discord extends AbstractProvider
         $options = $this->getRevokeTokenOptions($method, $params);
 
         return $this->getRequest($method, $url, $options);
-    }
-
-    /**
-     * Retrieve the OAuth Token Type Hint registry
-     *
-     * @return array
-     */
-    protected function getRevokeTokenTypes()
-    {
-        return ['access_token', 'refresh_token'];
-    }
-
-    /**
-     * Prepare request parameters for the token revocation request
-     *
-     * This makes sure that fields contain the correct value
-     *
-     * @param  array $defaults
-     * @param  array $options
-     * @return array
-     *
-     * @throws UnexpectedValueException
-     */
-    protected function prepareRevokeTokenParameters(array $defaults, array $options)
-    {
-        $provided = array_merge($defaults, $options);
-
-        // List of all known token types that can be revoked
-        $tokenTypes = $this->getRevokeTokenTypes();
-
-        if (isset($provided['token_type_hint']) && !in_array($provided['token_type_hint'], $tokenTypes)) {
-            throw new UnexpectedValueException(
-                sprintf(
-                    'Invalid token type hint "%s". The possible options are: %s',
-                    $provided['token_type_hint'],
-                    implode(', ', $tokenTypes)
-                )
-            );
-        }
-
-        return $provided;
     }
 
     /**
