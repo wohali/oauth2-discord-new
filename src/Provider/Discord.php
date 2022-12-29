@@ -26,7 +26,14 @@ class Discord extends AbstractProvider
     use BearerAuthorizationTrait;
 
     /**
-     * API Domain
+     * Default host
+     *
+     * @var string
+     */
+    public $host = 'https://discord.com';
+
+    /**
+     * API domain
      *
      * @var string
      */
@@ -39,7 +46,7 @@ class Discord extends AbstractProvider
      */
     public function getBaseAuthorizationUrl()
     {
-        return $this->apiDomain.'/oauth2/authorize';
+        return $this->host.'/oauth2/authorize';
     }
 
     /**
