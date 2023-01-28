@@ -42,6 +42,11 @@ jobs:
         run: |
           composer install --no-progress --no-suggest
           composer update --prefer-lowest --no-progress --no-interaction
+        if: matrix.php != '8.1' && matrix.php != '8.2'
+
+      - name: Install dependencies
+        run: composer install --no-progress --no-suggest
+        if: matrix.php == '8.1' || matrix.php == '8.2'
 
       - name: Run PHPUnit tests
         run: ./vendor/bin/phpunit
