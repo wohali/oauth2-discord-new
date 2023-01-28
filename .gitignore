@@ -1,10 +1,14 @@
-*.swp
-*~
-.coveralls.yml
-build/
+# Composer
 composer.lock
 composer.phar
-coveralls.phar
-test/log
-vendor/
+/vendor/
+
+# PhpStorm
+/.idea/
+
+# Tests
 .phpunit.result.cache
+
+# Coverage
+coverage.xml
+/build/
