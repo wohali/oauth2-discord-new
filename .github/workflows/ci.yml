@@ -39,7 +39,9 @@ jobs:
           coverage: ${{ matrix.coverage }}
 
       - name: Install dependencies
-        run: composer install --prefer-lowest --no-progress --no-suggest
+        run: |
+          composer install --no-progress --no-suggest
+          composer update --prefer-lowest --no-progress --no-interaction
 
       - name: Run PHPUnit tests
         run: ./vendor/bin/phpunit
