@@ -1,0 +1,57 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+  push:
+    branches: [ master, github-actions ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [ 7.2, 7.3, 7.4, 8.0, 8.1, 8.2 ]
+        coverage: [ none ]
+        include:
+          - description: Log code coverage
+            php: 8.2
+            coverage: xdebug
+
+    name: PHP ${{ matrix.php }}
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+
+      - name: Configure cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.composer/cache/files
+          key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: ${{ matrix.coverage }}
+
+      - name: Install dependencies
+        run: composer install --prefer-lowest --no-progress --no-suggest
+
+      - name: Run PHPUnit tests
+        run: ./vendor/bin/phpunit
+        if: matrix.coverage == 'none'
+
+      - name: Run PHPUnit tests with code coverage
+        run: ./vendor/bin/phpunit --coverage-clover=coverage.xml
+        if: matrix.coverage == 'xdebug'
+
+      - name: Run codecov
+        uses: codecov/codecov-action@v3
+        if: matrix.coverage == 'xdebug'
+        with:
+          files: coverage.xml
+          fail_ci_if_error: true
