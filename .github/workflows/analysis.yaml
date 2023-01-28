@@ -3,7 +3,7 @@ name: Code Style
 on:
   pull_request:
   push:
-    branches: [ master, github-actions ]
+    branches: [ master ]
 
 jobs:
   code-sniffer:
