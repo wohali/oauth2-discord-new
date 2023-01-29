@@ -1,0 +1,47 @@
+name: Code Style
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  code-sniffer:
+    runs-on: ubuntu-latest
+
+    name: PHP_CodeSniffer
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - run: ./vendor/bin/phpcs src --standard=psr2 -sp
+
+  lint:
+    runs-on: ubuntu-latest
+
+    name: PHP Parallel Lint
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - run: ./vendor/bin/parallel-lint src

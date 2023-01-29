@@ -2,7 +2,7 @@
 [![Source Code](http://img.shields.io/badge/source-wohali/oauth2--discord--new-blue.svg?style=flat-square)](https://github.com/wohali/oauth2-discord-new)
 [![Latest Version](https://img.shields.io/github/release/wohali/oauth2-discord-new.svg?style=flat-square)](https://github.com/wohali/oauth2-discord-new/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
-[![Build Status](https://img.shields.io/travis/wohali/oauth2-discord-new/master.svg?style=flat-square)](https://travis-ci.org/wohali/oauth2-discord-new)
+[![Build Status](https://github.com/wohali/oauth2-discord-new/actions/workflows/ci.yml/badge.svg)](https://github.com/wohali/oauth2-discord-new/actions/workflows/ci.yml)
 [![Scrutinizer](https://img.shields.io/scrutinizer/g/wohali/oauth2-discord-new/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/wohali/oauth2-discord-new)
 [![Coverage Status](https://img.shields.io/coveralls/wohali/oauth2-discord-new/master.svg?style=flat-square)](https://coveralls.io/r/wohali/oauth2-discord-new?branch=master)
 [![Total Downloads](https://img.shields.io/packagist/dt/wohali/oauth2-discord-new.svg?style=flat-square)](https://packagist.org/packages/wohali/oauth2-discord-new)
