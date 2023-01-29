@@ -97,9 +97,6 @@ class Discord extends AbstractProvider
         return [
             'identify',
             'email',
-            'connections',
-            'guilds',
-            'guilds.join'
         ];
     }
 
