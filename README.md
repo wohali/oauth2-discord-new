@@ -102,6 +102,10 @@ if (!isset($_GET['code'])) {
 }
 ```
 
+Keep in mind that this is only a simple example. In your application, you might
+want to modify the scopes to your needs, use a database with persistent storage
+for the token data, or revoke the tokens once they are no longer used.
+
 ### Managing Scopes
 
 When creating your Discord authorization URL in Step 1, you can specify the state and scopes your application may authorize.
@@ -147,6 +151,31 @@ if ($existingAccessToken->hasExpired()) {
     // Purge old access token and store new access token to your data store.
 }
 ```
+
+### Revoking a Token
+
+No longer used tokens should be revoked so the authorization server can clean up
+data associated with that token. This is useful when the end-user logs out or
+uninstalls your application, and it can be achieved by invoking a simple request
+to the authorization server using the refresh token:
+
+```php
+$provider = new \Wohali\OAuth2\Client\Provider\Discord([
+    'clientId' => '{discord-client-id}',
+    'clientSecret' => '{discord-client-secret}',
+]);
+
+/** @var League\OAuth2\Client\Token\AccessTokenInterface $existingAccessToken */
+$existingAccessToken = getAccessTokenFromYourDataStore();
+
+$provider->revokeToken([
+    'token' => $existingAccessToken->getRefreshToken(),
+    'token_type_hint' => 'refresh_token',
+]);
+```
+
+Keep in mind that due to the nature of this request, the authorization server
+does not throw any error when a token is (already) invalid.
 
 ### Client Credentials Grant
 

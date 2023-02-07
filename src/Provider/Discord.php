@@ -18,12 +18,15 @@ use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use UnexpectedValueException;
 use Wohali\OAuth2\Client\Provider\Exception\DiscordIdentityProviderException;
 
 class Discord extends AbstractProvider
 {
     use BearerAuthorizationTrait;
+    use TokenRevocationProviderTrait;
 
     /**
      * Default host
@@ -58,6 +61,16 @@ class Discord extends AbstractProvider
     public function getBaseAccessTokenUrl(array $params)
     {
         return $this->apiDomain.'/oauth2/token';
+    }
+
+    /**
+     * Get revoke token URL to revoke an access/refresh token
+     *
+     * @return string
+     */
+    public function getBaseRevokeTokenUrl()
+    {
+        return $this->apiDomain.'/oauth2/token/revoke';
     }
 
     /**
@@ -129,5 +142,77 @@ class Discord extends AbstractProvider
     protected function createResourceOwner(array $response, AccessToken $token)
     {
         return new DiscordResourceOwner($response);
+    }
+
+    /**
+     * Return the method to use when revoking the access/refresh token
+     *
+     * @return string
+     */
+    protected function getRevokeTokenMethod()
+    {
+        return self::METHOD_POST;
+    }
+
+    /**
+     * Build request options used for revoking an access/refresh token
+     *
+     * @param  string $method
+     * @param  array $params
+     * @return array
+     */
+    protected function getRevokeTokenOptions(string $method, array $params)
+    {
+        return $this->optionProvider->getAccessTokenOptions($method, $params);
+    }
+
+    /**
+     * Return a prepared request for revoking an access/refresh token
+     *
+     * @param  array $params
+     * @return RequestInterface
+     */
+    protected function getRevokeTokenRequest(array $params)
+    {
+        $method = $this->getRevokeTokenMethod();
+        $url = $this->getBaseRevokeTokenUrl();
+
+        $options = $this->getRevokeTokenOptions($method, $params);
+
+        return $this->getRequest($method, $url, $options);
+    }
+
+    /**
+     * Request a token revocation
+     *
+     * Revoking an access/refresh token will invalidate it and will clean up
+     * associated data with the underlying authorization grant.
+     *
+     * Revoking an access token MAY also invalidate the refresh token based on
+     * the same authorization grant. It actually is the current behavior of the
+     * Discord OAuth2 server. However, this behavior is only optional (according
+     * to the section 2.1, RFC7009) and undocumented and may change.
+     *
+     * On the other hand, revoking a refresh token will immediately invalidate
+     * all access tokens based on the same authorization grant.
+     *
+     * @param  array $options Request parameters
+     * @return void
+     *
+     * @throws IdentityProviderException
+     * @throws UnexpectedValueException
+     */
+    public function revokeToken(array $options)
+    {
+        $params = [
+            'client_id' => $this->clientId,
+            'client_secret' => $this->clientSecret,
+        ];
+
+        $params = $this->prepareRevokeTokenParameters($params, $options);
+        $request = $this->getRevokeTokenRequest($params);
+
+        // The name is misleading, however, this also sends the request
+        $this->getParsedResponse($request);
     }
 }
